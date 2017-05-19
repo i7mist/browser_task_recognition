@@ -16,8 +16,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     tabList.push(tab)
     tabDict[tabId] = tabList.length-1
     tabHistory.push(new TabRecord(tabDict[tabId], (new Date()).getTime()))
-    chrome.storage.sync.set({"tabHistory": tabHistory})
-    chrome.storage.sync.set({"tabList": tabList})
+    chrome.runtime.sendMessage("mpkbfmdhciepiffhidjiloldcfejkebc", {"tabActivated": tabHistory[tabHistory.length-1]})
+    chrome.runtime.sendMessage("mpkbfmdhciepiffhidjiloldcfejkebc", {"newTab": {"id":tabList.length-1, "tab": tab}})
   }
 })
 
@@ -25,7 +25,6 @@ chrome.tabs.onActivated.addListener(function(activeTab) {
   if (typeof tabDict[activeTab.tabId] !== "undefined") {
     console.log(tabDict[activeTab.tabId])
     tabHistory.push(new TabRecord(tabDict[activeTab.tabId], (new Date()).getTime()))
-    chrome.storage.sync.set({"tabHistory": tabHistory})
-    chrome.storage.sync.set({"tabList": tabList})
+    chrome.runtime.sendMessage("mpkbfmdhciepiffhidjiloldcfejkebc", {"tabActivated": tabHistory[tabHistory.length-1]})
   }
 });

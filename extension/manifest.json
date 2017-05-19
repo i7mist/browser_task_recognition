@@ -1,0 +1,11 @@
+{
+  "manifest_version": 2,
+  "name": "browser task reorganizer",
+  "version": "0.1",
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "permissions": [
+    "tabs"
+  ]
+}
