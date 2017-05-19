@@ -16,8 +16,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     tabList.push(tab)
     tabDict[tabId] = tabList.length-1
     tabHistory.push(new TabRecord(tabDict[tabId], (new Date()).getTime()))
-    console.log(tabHistory)
-    console.log(tabList)
+    chrome.storage.sync.set({"tabHistory": tabHistory})
+    chrome.storage.sync.set({"tabList": tabList})
   }
 })
 
@@ -25,7 +25,7 @@ chrome.tabs.onActivated.addListener(function(activeTab) {
   if (typeof tabDict[activeTab.tabId] !== "undefined") {
     console.log(tabDict[activeTab.tabId])
     tabHistory.push(new TabRecord(tabDict[activeTab.tabId], (new Date()).getTime()))
-    console.log(tabHistory)
-    console.log(tabList)
+    chrome.storage.sync.set({"tabHistory": tabHistory})
+    chrome.storage.sync.set({"tabList": tabList})
   }
 });
