@@ -70,11 +70,13 @@ function onInitFs(fs) {
   console.log(tabActivatedHistoryFileName)
   console.log(tabListFileName)
   myFileSystem = fs
+  console.log(fs.root.toURL())
   fs.root.getFile(tabActivatedHistoryFileName, {create: true, exclusive: true}, function(fileEntry) {
 
      console.log(fileEntry.isFile)
      console.log(fileEntry.name)
      console.log(fileEntry.fullPath)
+     console.log(fileEntry.toURL())
 
   }, errorHandler);
 
@@ -83,6 +85,7 @@ function onInitFs(fs) {
      console.log(fileEntry.isFile)
      console.log(fileEntry.name)
      console.log(fileEntry.fullPath)
+     console.log(fileEntry.toURL())
 
   }, errorHandler);
 }
