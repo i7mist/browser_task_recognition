@@ -20,10 +20,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 //     chrome.runtime.sendMessage("mpkbfmdhciepiffhidjiloldcfejkebc", {"newTab": {"id":tabList.length-1, "tab": tab}})
     tabActivatedRecord = {}
     tabActivatedRecord["tabActivated-" + (tabHistory.length-1)] = tabHistory[tabHistory.length-1]
-    chrome.storage.sync.set(tabActivatedRecord)
+    chrome.storage.local.set(tabActivatedRecord)
     tabListRecord = {}
     tabListRecord["newTab-" + (tabList.length-1)] = tab
-    chrome.storage.sync.set(tabListRecord)
+    chrome.storage.local.set(tabListRecord)
   }
 })
 
@@ -34,6 +34,6 @@ chrome.tabs.onActivated.addListener(function(activeTab) {
 //     chrome.runtime.sendMessage("mpkbfmdhciepiffhidjiloldcfejkebc", {"tabActivated": tabHistory[tabHistory.length-1]})
     tabActivatedRecord = {}
     tabActivatedRecord["tabActivated-" + (tabHistory.length-1)] = tabHistory[tabHistory.length-1]
-    chrome.storage.sync.set(tabActivatedRecord)
+    chrome.storage.local.set(tabActivatedRecord)
   }
 });
