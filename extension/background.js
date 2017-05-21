@@ -4,6 +4,8 @@ var tabDict = {};
 var tabList = [];
 var tabHistory = [];
 
+var replayMode = false;
+
 class TabRecord {
   constructor(tabUID, timestamp) {
     this.tabUID = tabUID;
@@ -12,6 +14,10 @@ class TabRecord {
 }
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  if (replayMode) {
+    return;
+  }
+  console.log("onUpdated")
   if (changeInfo.status === "complete") {
     tabList.push(tab)
     tabDict[tabId] = tabList.length-1
@@ -28,6 +34,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 })
 
 chrome.tabs.onActivated.addListener(function(activeTab) {
+  if (replayMode) {
+    return;
+  }
+  console.log("onActivated")
   if (typeof tabDict[activeTab.tabId] !== "undefined") {
     console.log(tabDict[activeTab.tabId])
     tabHistory.push(new TabRecord(tabDict[activeTab.tabId], (new Date()).getTime()))
@@ -37,3 +47,10 @@ chrome.tabs.onActivated.addListener(function(activeTab) {
     chrome.storage.local.set(tabActivatedRecord)
   }
 });
+
+// browser action
+// to toggle replay mode
+chrome.browserAction.onClicked.addListener(function(tab) {
+  replayMode = !replayMode
+  console.log("replayMode " + replayMode)
+})
