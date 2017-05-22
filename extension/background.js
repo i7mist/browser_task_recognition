@@ -54,9 +54,11 @@ var storedTabHistory = [];
 var newTabIdBegin = 0;
 var newTabIdEnd = 513;
 // var tabHistoryBegin = 0;
-var tabHistoryBegin = 100;
-var tabHistoryEnd = 200;
+var tabHistoryBegin = 0;
+var tabHistoryEnd = 1138;
 var speedup = 5;
+
+var pauseReplayTab = 0
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
   replayTabHistory(parseInt(alarm.name) + 1)
@@ -64,6 +66,7 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
 
 function replayTabHistory(id) {
   if (!replayMode) {
+    pauseReplayTab = id;
     return;
   }
   console.log("id: " + id)
@@ -120,7 +123,7 @@ function getTabList(id) {
     return;
   }
   if (id >= newTabIdEnd) {
-    replayTabHistory(0)
+    replayTabHistory(pauseReplayTab)
     return;
   }
   chrome.storage.local.get("newTab-" + id, function(items) {
@@ -161,9 +164,9 @@ chrome.browserAction.onClicked.addListener(function(tab) {
   if (!replayMode) {
     return;
   }
-  storedTabDict = {}
-  storedTabList = []
-  storedTabHistory = []
+//   storedTabDict = {}
+//   storedTabList = []
+//   storedTabHistory = []
   console.log("replayMode " + replayMode)
   replayTrace()
 })
