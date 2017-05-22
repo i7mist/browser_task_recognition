@@ -6,57 +6,57 @@ var tabHistory = [];
 
 var replayMode = false;
 
-class TabRecord {
-  constructor(tabUID, timestamp) {
-    this.tabUID = tabUID;
-    this.timestamp = timestamp;
-  }
-}
-
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  if (replayMode) {
-    tabList.push(tab)
-    tabDict[tabId] = tabList.length-1
-    tabHistory.push(new TabRecord(tabDict[tabId], (new Date()).getTime()))
-//     chrome.runtime.sendMessage("mpkbfmdhciepiffhidjiloldcfejkebc", {"tabActivated": tabHistory[tabHistory.length-1]})
-//     chrome.runtime.sendMessage("mpkbfmdhciepiffhidjiloldcfejkebc", {"newTab": {"id":tabList.length-1, "tab": tab}})
-    tabActivatedRecord = {}
-    tabActivatedRecord["tabActivated-" + (tabHistory.length-1)] = tabHistory[tabHistory.length-1]
-    chrome.storage.local.set(tabActivatedRecord)
-    tabListRecord = {}
-    tabListRecord["newTab-" + (tabList.length-1)] = tab
-    chrome.storage.local.set(tabListRecord)
-  }
-})
-
-chrome.tabs.onActivated.addListener(function(activeTab) {
-  if (replayMode) {
-    return;
-  }
-  console.log("onActivated")
-  if (typeof tabDict[activeTab.tabId] !== "undefined") {
-    console.log(tabDict[activeTab.tabId])
-    tabHistory.push(new TabRecord(tabDict[activeTab.tabId], (new Date()).getTime()))
-//     chrome.runtime.sendMessage("mpkbfmdhciepiffhidjiloldcfejkebc", {"tabActivated": tabHistory[tabHistory.length-1]})
-    tabActivatedRecord = {}
-    tabActivatedRecord["tabActivated-" + (tabHistory.length-1)] = tabHistory[tabHistory.length-1]
-    chrome.storage.local.set(tabActivatedRecord)
-  }
-});
-
+// class TabRecord {
+//   constructor(tabUID, timestamp) {
+//     this.tabUID = tabUID;
+//     this.timestamp = timestamp;
+//   }
+// }
+// 
+// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+//   if (replayMode) {
+//     tabList.push(tab)
+//     tabDict[tabId] = tabList.length-1
+//     tabHistory.push(new TabRecord(tabDict[tabId], (new Date()).getTime()))
+// //     chrome.runtime.sendMessage("mpkbfmdhciepiffhidjiloldcfejkebc", {"tabActivated": tabHistory[tabHistory.length-1]})
+// //     chrome.runtime.sendMessage("mpkbfmdhciepiffhidjiloldcfejkebc", {"newTab": {"id":tabList.length-1, "tab": tab}})
+//     tabActivatedRecord = {}
+//     tabActivatedRecord["tabActivated-" + (tabHistory.length-1)] = tabHistory[tabHistory.length-1]
+//     chrome.storage.local.set(tabActivatedRecord)
+//     tabListRecord = {}
+//     tabListRecord["newTab-" + (tabList.length-1)] = tab
+//     chrome.storage.local.set(tabListRecord)
+//   }
+// })
+// 
+// chrome.tabs.onActivated.addListener(function(activeTab) {
+//   if (replayMode) {
+//     return;
+//   }
+//   console.log("onActivated")
+//   if (typeof tabDict[activeTab.tabId] !== "undefined") {
+//     console.log(tabDict[activeTab.tabId])
+//     tabHistory.push(new TabRecord(tabDict[activeTab.tabId], (new Date()).getTime()))
+// //     chrome.runtime.sendMessage("mpkbfmdhciepiffhidjiloldcfejkebc", {"tabActivated": tabHistory[tabHistory.length-1]})
+//     tabActivatedRecord = {}
+//     tabActivatedRecord["tabActivated-" + (tabHistory.length-1)] = tabHistory[tabHistory.length-1]
+//     chrome.storage.local.set(tabActivatedRecord)
+//   }
+// });
+// 
 //
 // The following code is for replay purpose
 //
 
 var storedTabDict = {};
 var storedTabList = [];
-var storedTabHisotry = [];
+var storedTabHistory = [];
 var newTabIdBegin = 0;
-var newTabIdEnd = 186;
+var newTabIdEnd = 513;
+// var tabHistoryBegin = 0;
 var tabHistoryBegin = 0;
-// var tabHistoryEnd = 326;
-var tabHistoryEnd = 30;
-var speedup = 2;
+var tabHistoryEnd = 200;
+var speedup = 5;
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
   replayTabHistory(parseInt(alarm.name) + 1)
@@ -88,6 +88,9 @@ function replayTabHistory(id) {
       return;
     }
     var timeInterval = (storedTabHistory[id + 1].timestamp - storedTabHistory[id].timestamp) / speedup
+    if (timeInterval > 5000) {
+      timeInterval = 5000
+    }
     console.log("timeInterval: " + timeInterval);
 //     setTimeout(replayTabHistory(id+1), timeInterval);
     chrome.alarms.create(String(id), {when: Date.now() + timeInterval})
