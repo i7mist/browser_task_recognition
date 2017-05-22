@@ -1,0 +1,15 @@
+#taskUIDOverlay {
+    position: fixed;
+    display: block;
+    width: 30%;
+    height: 30%;
+    top: 40;
+    left: 40;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.2);
+    z-index: 2;
+    cursor: pointer;
+    font-size:60px;
+    color: black;
+}
