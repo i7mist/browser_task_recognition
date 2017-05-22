@@ -129,3 +129,41 @@ for k in range(tab_history_begin, tab_history_end+1):
             feature_4_cnt[(tabUID1, tabUID2)] = 0;
         feature_4_cnt[(tabUID1, tabUID2)] = feature_4_cnt[(tabUID1, tabUID2)] + tab_history_list[k2+1]["timestamp"] - tab_history_list[k2]["timestamp"]
 
+# gather access pattern features 
+feature_1 = {}
+feature_2 = {}
+feature_3 = {}
+feature_4 = {}
+for i in range(new_tab_id_begin, new_tab_id_end+1):
+    for j in range(i+1, new_tab_id_end+1):
+        if (i, j) in feature_1_cnt:
+            feature_1[(i, j)] = feature_1_cnt[(i, j)] * 1.0 / (feature_1_tot[i] + feature_1_tot[j])
+        else:
+            feature_1[(i, j)] = 0
+
+for i in range(new_tab_id_begin, new_tab_id_end+1):
+    for j in range(i+1, new_tab_id_end+1):
+        if (i, j) in feature_2_cnt:
+            feature_2[(i, j)] = feature_2_cnt[(i, j)] * 1.0 / (feature_2_tot[i] + feature_2_tot[j])
+        else:
+            feature_2[(i, j)] = 0
+
+for i in range(new_tab_id_begin, new_tab_id_end+1):
+    for j in range(i+1, new_tab_id_end+1):
+        if (i, j) in feature_3_cnt:
+            feature_3[(i, j)] = feature_3_cnt[(i, j)] * 1.0 / (feature_3_tot[i] + feature_3_tot[j])
+        else:
+            feature_3[(i, j)] = 0
+
+for i in range(new_tab_id_begin, new_tab_id_end+1):
+    for j in range(i+1, new_tab_id_end+1):
+        if (i, j) in feature_4_cnt:
+            feature_4[(i, j)] = feature_4_cnt[(i, j)] * 1.0 / (feature_4_tot[i] + feature_4_tot[j])
+        else:
+            feature_4[(i, j)] = 0
+
+# load label
+label_file_name = sys.argv[2]
+label_file = open(label_file_name, "r")
+
+
