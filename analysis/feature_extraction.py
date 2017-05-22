@@ -165,5 +165,19 @@ for i in range(new_tab_id_begin, new_tab_id_end+1):
 # load label
 label_file_name = sys.argv[2]
 label_file = open(label_file_name, "r")
+tab_label = {}
+pair_label = {}
+cur_line_id = 0
+for line in label_file:
+    tab_label[cur_line_id] = line
+    cur_line_id = cur_line_id + 1
+
+# generate pair label
+for i in range(new_tab_id_begin, new_tab_id_end+1):
+    for j in range(i+1, new_tab_id_end+1):
+        if tab_label[i] == tab_label[j]:
+            pair_label[(i, j)] = 1
+        else:
+            pair_label[(i, j)] = 0
 
 
