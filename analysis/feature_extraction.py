@@ -11,9 +11,9 @@
 
 import sys
 import json
+import arff
 
 log_file = sys.argv[1]
-print log_file
 
 with open(log_file) as data_file:
     log_data = json.load(data_file)
@@ -176,8 +176,29 @@ for line in label_file:
 for i in range(new_tab_id_begin, new_tab_id_end+1):
     for j in range(i+1, new_tab_id_end+1):
         if tab_label[i] == tab_label[j]:
-            pair_label[(i, j)] = 1
+            pair_label[(i, j)] = 'yes'
         else:
-            pair_label[(i, j)] = 0
+            pair_label[(i, j)] = 'no'
 
+# generate arff file
+# header
+arff_data = {}
+arff_data["attributes"] = [
+            ("feature_1", "REAL"),
+            ("feature_2", "REAL"),
+            ("feature_3", "REAL"),
+            ("feature_4", "REAL"),
+            ("same_group", ["yes", "no"]),
+        ]
+arff_data["description"] = "browser tabs belong to same task classification"
+arff_data["relation"] = "multitasking"
+# fill data
+arff_data["data"] = []
+for i in range(new_tab_id_begin, new_tab_id_end+1):
+    for j in range(i+1, new_tab_id_end+1):
+        data_item = [feature_1[(i,j)], feature_2[(i,j)], feature_3[(i,j)], feature_4[(i,j)], pair_label[(i, j)]]
+        if data_item == [0, 0, 0, 0, 'no']:
+            continue
+        arff_data["data"].append(data_item)
 
+print arff.dumps(arff_data)
