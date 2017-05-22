@@ -54,7 +54,7 @@ var storedTabHistory = [];
 var newTabIdBegin = 0;
 var newTabIdEnd = 513;
 // var tabHistoryBegin = 0;
-var tabHistoryBegin = 0;
+var tabHistoryBegin = 100;
 var tabHistoryEnd = 200;
 var speedup = 5;
 
@@ -84,6 +84,24 @@ function replayTabHistory(id) {
     console.log(storedTabDict[tabUID])
     console.log("tabid: " + storedTabDict[tabUID].id)
     chrome.tabs.update(storedTabDict[tabUID].id, {active:true})
+    for (var key in storedTabDict) {
+      if (storedTabDict.hasOwnProperty(key)) {
+        // if any tabUID will not appear in any future record, then close it.
+        var containUID = false
+        for (var i = id ; i + tabHistoryBegin < tabHistoryEnd ; ++i) {
+          if (storedTabHistory[i].tabUID == key) {
+            containUID = true;
+            break;
+          }
+        }
+        if (!containUID) {
+          console.log("remove UID: " + key)
+          var tid = storedTabDict[key].id
+          delete storedTabDict[key];
+          chrome.tabs.remove(tid);
+        }
+      }
+    }
     if (id + tabHistoryBegin + 1 >= tabHistoryEnd) {
       return;
     }
